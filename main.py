@@ -3,7 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 import logging
 from routes.users import router as users_router
-from routes.users import get_users
+from routes.users import get_users, get_user, get_loans
+from routes.loans import router as loans_router
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -52,4 +54,9 @@ async def health_check(db: AsyncSession = Depends(get_db)):
 
 app.include_router(users_router)
 app.add_api_route("/users", get_users, methods=["GET"])
+app.add_api_route("/users/{user_id}", get_user, methods=["GET"])
+app.add_api_route("/loans", get_loans, methods=["GET"])
+# app.add_api_route("/loans", create_loan, methods=["POST"])
+app.include_router(users_router)
+app.include_router(loans_router)
 
