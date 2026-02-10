@@ -5,6 +5,9 @@ from schemas.user import UserCreate
 from core.security import hash_password
 # from database import get_db
 from src.database import get_db
+from core.logger import logger
+
+
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -41,6 +44,7 @@ async def create_user(
     await db.commit()
 
     return {"message": "User created successfully"}
+    logger.info(f"User {payload.email} created successfully.")
 
 
 async def get_users(db: AsyncSession = Depends(get_db)):
@@ -50,7 +54,58 @@ async def get_users(db: AsyncSession = Depends(get_db)):
             FROM users
         """)
     )
-
     users = result.fetchall()
+    logger.info("Fetched users successfully.")
 
     return {"users": [dict(row._mapping) for row in users]}
+    logger.info("Returned users data successfully.")
+
+
+async def get_user(user_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        text("""
+            SELECT id, full_name, email, role, created_at
+            FROM users
+            WHERE id = :user_id
+        """),
+        {"user_id": user_id},
+    )
+
+    user = result.fetchone()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    return {"user": dict(user._mapping)}
+
+async def get_loans(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        text("""
+            SELECT id, amount, status, created_at
+            FROM loans
+        """)
+    )
+    loans = result.fetchall()
+    logger.info("Fetched loans successfully.")
+
+    return {"loans": [dict(row._mapping) for row in loans]}
+    logger.info("Returned loans data successfully.")
+
+
+async def create_loan(payload: dict, db: AsyncSession = Depends(get_db)):
+    await db.execute(
+        text("""
+            INSERT INTO loans (amount, status)
+            VALUES (:amount, :status)
+        """),
+        {
+            "amount": payload["amount"],
+            "status": payload["status"],
+        },
+    )
+    await db.commit()
+    logger.info("Loan created successfully.")
+    return {"message": "Loan created successfully"}
