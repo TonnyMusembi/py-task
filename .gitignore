@@ -8,5 +8,10 @@ __pycache__/
 *.log
 .DS_Store
 .env
-
-
+_pycache_/
+*.pyc
+venv/
+env/
+__pycache__/
+*.sqlite3
+*.log

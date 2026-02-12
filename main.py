@@ -5,6 +5,7 @@ import logging
 from routes.users import router as users_router
 from routes.users import get_users, get_user, get_loans
 from routes.loans import router as loans_router
+from routes.customers import router as customers_router
 
 
 logging.basicConfig(level=logging.INFO)
@@ -59,4 +60,5 @@ app.add_api_route("/loans", get_loans, methods=["GET"])
 # app.add_api_route("/loans", create_loan, methods=["POST"])
 app.include_router(users_router)
 app.include_router(loans_router)
+app.include_router(customers_router)
 
