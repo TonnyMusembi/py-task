@@ -7,6 +7,10 @@ from schemas.loan import LoanCreate
 from src.database import get_db
 from core.logger import logger
 
+from services.publishers import publish_redis
+
+
+
 router = APIRouter(prefix="/loans", tags=["Loans"])
 
 
@@ -49,6 +53,16 @@ async def create_loan(
             payload.user_id,
             payload.amount,
         )
+
+        await publish_redis(
+    channel="loan.created",
+    payload={
+        # "loan_id": payload.loan_id,
+        "user_id": payload.user_id,
+        "amount": payload.amount,
+        "status": payload.status,
+    },
+)
         logger.info("Create loan payload: %s", payload.dict())
 
 
