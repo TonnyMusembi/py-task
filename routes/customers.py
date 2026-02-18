@@ -64,3 +64,24 @@ async def create_customer(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to create customer",
         )
+
+@router.get("/{customer_id}")
+async def get_customer(customer_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        text("""
+            SELECT id, full_name, email, phone_number, created_at
+            FROM customers
+            WHERE id = :customer_id
+        """),
+        {"customer_id": customer_id},
+    )
+    customer = result.fetchone()
+
+    if not customer:
+        logger.warning(f"Customer with ID {customer_id} not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
+
+    logger.info(f"Fetched customer with ID {customer_id} successfully.")
+    return {"customer": dict(customer._mapping)}
+
+
