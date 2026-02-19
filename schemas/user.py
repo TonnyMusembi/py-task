@@ -7,4 +7,4 @@ class UserCreate(BaseModel):
     full_name: str
     email: EmailStr
     password: str
-    role: Literal["admin", "agent", "customer"] = "customer"
+    # role: Literal["admin", "agent", "customer"] = "customer"
