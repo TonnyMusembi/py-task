@@ -6,3 +6,4 @@ async def publish_redis(channel: str, payload: dict):
     encoded = jsonable_encoder(payload)
     message = json.dumps(encoded)
     await redis_client.publish(channel, message)
+

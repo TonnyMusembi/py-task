@@ -99,3 +99,5 @@ async def reset_password(email: str, new_password: str, db: AsyncSession = Depen
         await db.rollback()
         logger.exception("Failed to reset password | email=%s", email)
         raise HTTPException(status_code=500, detail="Internal server error")
+
+
