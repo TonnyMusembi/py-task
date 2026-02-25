@@ -7,6 +7,7 @@ from routes.users import get_users, get_user, get_loans
 from routes.loans import router as loans_router
 from routes.customers import router as customers_router
 from routes.login import router as login_router
+# from  routes.branch import router as branches_router
 
 
 logging.basicConfig(level=logging.INFO)
@@ -44,4 +45,5 @@ app.include_router(users_router)
 app.include_router(loans_router)
 app.include_router(login_router)
 app.include_router(customers_router)
+# app.include_router(branches_router)
 
