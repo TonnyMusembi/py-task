@@ -24,3 +24,10 @@ class Branch():
 
     # Relationships
     company = relationship("Company", back_populates="branches")
+
+
+
+
+
+
+

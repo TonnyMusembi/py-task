@@ -77,3 +77,6 @@ async def create_loan(
             status_code=500,
             detail="Internal server error"
      )
+
+
+
